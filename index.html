@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ACEs Spine Degenerative Disease Risk Calculator</title>
+    <link rel="stylesheet" href="assets/styles.css">
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="header-grid" aria-label="Model overview">
+        <div class="intro-panel">
+          <div class="eyebrow">Interpretable Cox Predictor</div>
+          <h1>Spine Degenerative Disease Risk Calculator</h1>
+          <p>
+            An ACEs-informed risk model estimating incident spine degenerative disease risk at 5, 10, and 15 years.
+          </p>
+        </div>
+
+        <aside class="metric-panel" aria-label="Validation metrics">
+          <div>
+            <span class="metric-label">Reference test C-index</span>
+            <strong id="metric-cindex">0.666</strong>
+          </div>
+          <dl class="metric-list">
+            <div>
+              <dt>Cox model</dt>
+              <dd>Nomogram-aligned</dd>
+            </div>
+            <div>
+              <dt>Best ML AUC</dt>
+              <dd id="metric-auc">0.669</dd>
+            </div>
+            <div>
+              <dt>Horizon</dt>
+              <dd>5 / 10 / 15 years</dd>
+            </div>
+          </dl>
+        </aside>
+      </section>
+
+      <section class="workspace-grid">
+        <form class="input-panel" id="profile-form" aria-label="Participant profile">
+          <div class="panel-heading">
+            <h2>Input Profile</h2>
+            <p>Participant characteristics used by the Cox nomogram and machine-learning workflow.</p>
+          </div>
+
+          <div class="control-grid">
+            <label class="field">
+              <span>ACEs score</span>
+              <input id="aces_score" name="aces_score" type="range" min="0" max="5" step="1">
+              <output id="aces_score_value" for="aces_score">0</output>
+            </label>
+
+            <label class="field">
+              <span>Age, years</span>
+              <input id="age" name="age" type="number" min="40" max="69" step="1">
+            </label>
+
+            <label class="field">
+              <span>Sex</span>
+              <select id="sex" name="sex">
+                <option>Female</option>
+                <option>Male</option>
+              </select>
+            </label>
+
+            <label class="field">
+              <span>BMI, kg/m2</span>
+              <input id="bmi" name="bmi" type="number" min="18" max="42" step="0.1">
+            </label>
+
+            <label class="field">
+              <span>Education</span>
+              <select id="education" name="education">
+                <option>College</option>
+                <option>Other</option>
+                <option>Missing</option>
+              </select>
+            </label>
+
+            <label class="field">
+              <span>Smoking status</span>
+              <select id="smoking" name="smoking">
+                <option>Never</option>
+                <option>Former</option>
+                <option>Current</option>
+                <option>Missing</option>
+              </select>
+            </label>
+
+            <label class="field">
+              <span>Household income</span>
+              <select id="household_income" name="household_income">
+                <option value="Low">Low</option>
+                <option value="Middle">Middle</option>
+                <option value="High">High</option>
+                <option value="Missing">Missing</option>
+              </select>
+            </label>
+
+            <label class="field">
+              <span>Physical activity</span>
+              <select id="physical_activity" name="physical_activity">
+                <option>Low</option>
+                <option>Moderate</option>
+                <option>High</option>
+                <option>Missing</option>
+              </select>
+            </label>
+
+            <label class="field field-wide">
+              <span>TDI</span>
+              <input id="tdi" name="tdi" type="range" min="-6" max="7" step="0.1">
+              <output id="tdi_value" for="tdi">-2.4</output>
+            </label>
+          </div>
+
+          <div class="actions">
+            <button type="button" class="secondary-button" id="reset-profile">Reset reference</button>
+            <button type="button" class="primary-button" id="example-profile">High-risk example</button>
+          </div>
+        </form>
+
+        <section class="result-panel" aria-label="Risk estimate">
+          <div class="panel-heading result-heading">
+            <div>
+              <h2>Estimated Risk</h2>
+              <p id="risk-subtitle">15-year incident spine degenerative disease risk</p>
+            </div>
+            <div class="horizon-toggle" role="group" aria-label="Risk horizon">
+              <button type="button" data-horizon="5">5y</button>
+              <button type="button" data-horizon="10">10y</button>
+              <button type="button" data-horizon="15" class="active">15y</button>
+            </div>
+          </div>
+
+          <div class="risk-row">
+            <div class="risk-number" id="risk-percent">0.0%</div>
+            <span class="risk-badge" id="risk-category">Moderate</span>
+          </div>
+
+          <div class="risk-meter" aria-label="Cohort-relative risk meter">
+            <div class="meter-labels">
+              <span>Low</span>
+              <span>Moderate</span>
+              <span>High</span>
+              <span>Very high</span>
+            </div>
+            <div class="meter-track">
+              <div class="meter-fill"></div>
+              <div class="meter-marker" id="risk-marker"></div>
+            </div>
+          </div>
+
+          <div class="summary-strip" aria-label="Model summary">
+            <div>
+              <span>Reference profile</span>
+              <strong id="reference-risk">0.0%</strong>
+            </div>
+            <div>
+              <span>Hazard ratio vs reference</span>
+              <strong id="relative-hr">1.00</strong>
+            </div>
+            <div>
+              <span>XGBoost AUC</span>
+              <strong id="xgb-auc">0.667</strong>
+            </div>
+          </div>
+
+          <div class="contributors">
+            <div class="section-title">
+              <h3>Main Contributors</h3>
+              <span>local log-risk explanation</span>
+            </div>
+            <div id="contributors-list" class="contributors-list"></div>
+          </div>
+        </section>
+      </section>
+
+    </main>
+
+    <script src="assets/model-data.js"></script>
+    <script src="assets/app.js"></script>
+  </body>
+</html>

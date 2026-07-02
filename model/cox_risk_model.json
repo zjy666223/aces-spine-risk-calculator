@@ -1,0 +1,138 @@
+{
+  "meta": {
+    "title": "ACEs-informed spine degenerative disease risk calculator",
+    "modelType": "Cox proportional hazards model",
+    "outcome": "Incident spine degenerative disease",
+    "eventDefinition": "ICD-10 M48.0, M50.3, M51.3, M47, and M43.1",
+    "generatedAt": "2026-07-01 22:28:37 PDT",
+    "sourceDataset": "ml_modeling_dataset_raw.csv"
+  },
+  "coefficients": {
+    "aces_score": 0.129555183701,
+    "age": 0.057783907844,
+    "sexMale": -0.110498521974,
+    "bmi": 0.049692279489,
+    "educationOther": 0.146749236422,
+    "educationMissing": 0.321429364805,
+    "smokingFormer": 0.216647011734,
+    "smokingCurrent": 0.187645834733,
+    "smokingMissing": 0.379775013342,
+    "household_incomeMiddle": -0.126671839669,
+    "household_incomeHigh": -0.345772218129,
+    "household_incomeMissing": 0.071552862123,
+    "physical_activityModerate": -0.147365604333,
+    "physical_activityHigh": -0.051867562145,
+    "physical_activityMissing": 0.0144385759,
+    "tdi": 0.014413796864
+  },
+  "coefficientNames": ["aces_score", "age", "sexMale", "bmi", "educationOther", "educationMissing", "smokingFormer", "smokingCurrent", "smokingMissing", "household_incomeMiddle", "household_incomeHigh", "household_incomeMissing", "physical_activityModerate", "physical_activityHigh", "physical_activityMissing", "tdi"],
+  "baselineCumHaz": {
+    "5": 8.53502770428e-05,
+    "10": 0.0002424637260939,
+    "15": 0.0003970421712806
+  },
+  "featureMeans": {
+    "aces_score": 0.818756281407,
+    "age": 56.315389447236,
+    "sexMale": 0.42324120603,
+    "bmi": 26.916584145729,
+    "educationOther": 0.482198492462,
+    "educationMissing": 0.081972361809,
+    "smokingFormer": 0.35682160804,
+    "smokingCurrent": 0.076972361809,
+    "smokingMissing": 0.002349246231,
+    "household_incomeMiddle": 0.474673366834,
+    "household_incomeHigh": 0.065854271357,
+    "household_incomeMissing": 0.104334170854,
+    "physical_activityModerate": 0.355703517588,
+    "physical_activityHigh": 0.318881909548,
+    "physical_activityMissing": 0.175942211055,
+    "tdi": -1.61558241206
+  },
+  "featureMeanNames": ["aces_score", "age", "sexMale", "bmi", "educationOther", "educationMissing", "smokingFormer", "smokingCurrent", "smokingMissing", "household_incomeMiddle", "household_incomeHigh", "household_incomeMissing", "physical_activityModerate", "physical_activityHigh", "physical_activityMissing", "tdi"],
+  "riskQuantiles": {
+    "5": {
+      "q10": 0.003848,
+      "q25": 0.005839,
+      "q33": 0.006945,
+      "q50": 0.009358,
+      "q67": 0.012398,
+      "q75": 0.014254,
+      "q90": 0.020008,
+      "q95": 0.024497
+    },
+    "10": {
+      "q10": 0.010893,
+      "q25": 0.016499,
+      "q33": 0.019602,
+      "q50": 0.026355,
+      "q67": 0.034821,
+      "q75": 0.039965,
+      "q90": 0.055797,
+      "q95": 0.068032
+    },
+    "15": {
+      "q10": 0.017775,
+      "q25": 0.026876,
+      "q33": 0.031899,
+      "q50": 0.042794,
+      "q67": 0.056385,
+      "q75": 0.064606,
+      "q90": 0.089733,
+      "q95": 0.108968
+    }
+  },
+  "referenceProfile": {
+    "aces_score": 0,
+    "age": 57,
+    "sex": "Female",
+    "bmi": 26.2,
+    "education": "College",
+    "smoking": "Never",
+    "household_income": "Middle",
+    "physical_activity": "Moderate",
+    "tdi": -2.4
+  },
+  "levels": {
+    "sex": ["Female", "Male", "Missing"],
+    "education": ["College", "Other", "Missing"],
+    "smoking": ["Never", "Former", "Current", "Missing"],
+    "household_income": ["Low", "Middle", "High", "Missing"],
+    "physical_activity": ["Low", "Moderate", "High", "Missing"]
+  },
+  "inputRanges": {
+    "aces_score": {
+      "min": 0,
+      "max": 5,
+      "step": 1
+    },
+    "age": {
+      "min": 40,
+      "max": 69,
+      "step": 1
+    },
+    "bmi": {
+      "min": 18,
+      "max": 42,
+      "step": 0.1
+    },
+    "tdi": {
+      "min": -6,
+      "max": 7,
+      "step": 0.1
+    }
+  },
+  "metrics": {
+    "trainN": 79600,
+    "trainEvents": 3891,
+    "testN": 26535,
+    "testEvents": 1298,
+    "coxTrainCIndex": 0.6701,
+    "coxTestCIndex": 0.6657,
+    "bestMlModel": "Logistic regression",
+    "bestMlAuc": 0.669,
+    "xgboostAuc": 0.667,
+    "xgboostSensitivity": 0.775,
+    "xgboostSpecificity": 0.469
+  }
+}
